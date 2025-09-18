@@ -30,4 +30,9 @@ class ProductService
     {
         return Product::where('slug', $slug)->with('categoryProduct.category')->first();
     }
+
+    public function getProductById($id)
+    {
+        return Product::where('id', $id)->with('categoryProduct.category')->first();
+    }
 }
