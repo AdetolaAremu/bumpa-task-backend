@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('payment_status', ['paid', 'pending', 'not_paid'])->default('not_paid');
             $table->enum('order_status', ['pending', 'shipped', 'completed', 'canceled'])->default('pending');
             $table->string('transaction_type')->nullable();
+            $table->string('payment_reference');
             $table->boolean('cashback_unlocked')->default(0);
             $table->timestamps();
         });
