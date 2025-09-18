@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cart_id')->references('id')->on('carts')->onDelete('cascade');
-            $table->foreignId('product_id')->references('id')->on('inventories')->onDelete('cascade');
+            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->string('title');
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
