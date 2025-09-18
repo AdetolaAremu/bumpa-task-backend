@@ -25,7 +25,7 @@ class AuthController extends Controller
     {
         $attemptLogin = $authService->loginUser($request);
 
-        if ($attemptLogin instanceof \Illuminate\Http\Response) return $attemptLogin;
+        if ($this->errorInstance($attemptLogin)) return $attemptLogin;
 
         return $this->successResponse('User logged in successfully', $attemptLogin);
     }

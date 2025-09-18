@@ -43,6 +43,6 @@ class AuthService
             return $this->errorResponse('Invalid credentials, password and/or email mismatch', 401);
         }
 
-        return $getUser->createToken('users')->accessToken;
+        return [ 'token' => $getUser->createToken('users')->accessToken ];
     }
 }

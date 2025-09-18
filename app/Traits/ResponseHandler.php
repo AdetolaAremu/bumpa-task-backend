@@ -20,4 +20,9 @@ trait ResponseHandler
             'message' => $message,
         ], $statusCode);
     }
+
+    public function errorInstance($response)
+    {
+        return $response instanceof \Illuminate\Http\JsonResponse ? true : false;
+    }
 }
