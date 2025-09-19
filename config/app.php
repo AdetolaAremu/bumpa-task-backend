@@ -27,6 +27,8 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'paystackSecret' => env('PAYSTACK_SECRET_KEY'),
+    'paystackCallbackUrl' => env('PAYSTACK_CALLBACK_URL'),
 
     /*
     |--------------------------------------------------------------------------
