@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaymentConfirmationRequest;
 use App\Services\CheckoutService;
 use App\Traits\ResponseHandler;
-use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {

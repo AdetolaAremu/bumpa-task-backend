@@ -68,6 +68,7 @@ class CheckoutService
             $getCart = $cartService->getUserCartWithItems();
 
             if ($response->successful() && $response['data']['status'] === 'success') {
+            // if ($response['data']['status'] === 'success') {
                 if ($getCart->payment_reference != $request->reference_no) {
                     return $this->errorResponse('Payment reference and cart mismatch');
                 }
@@ -96,6 +97,8 @@ class CheckoutService
                 // we need to delete cart for the failed transaction
                 $cartService->deleteCart();
             }
+
+            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th);
@@ -109,7 +112,7 @@ class CheckoutService
             'order_code' => $request->reference_no,
             'user_id' => $request->user()->id,
             'total_amount' => $total,
-            'payment_status' => $paymentStatus,
+            'payment_status' => $paymentStatus == 'success' ? 'paid' : 'not_paid',
             'transaction_type' => 'paystack',
             'payment_reference' => $request->reference_no,
             'cashback_unlocked' => 0

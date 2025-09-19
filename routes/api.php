@@ -26,5 +26,6 @@ Route::middleware('auth:api')->prefix('user')->group(function() {
 
     Route::prefix('order')->group(function () {
         Route::get('/', [CheckoutController::class, 'initializePayment']);
+        Route::post('/confirm', [CheckoutController::class, 'paymentConfirmation']);
     });
 });
