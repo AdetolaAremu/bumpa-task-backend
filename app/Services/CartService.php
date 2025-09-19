@@ -100,4 +100,11 @@ class CartService
 
         return $cartItem->delete();
     }
+
+    // public function getCartByPaymentReference($paymentReference)
+    // {
+    //     return Cart::where('user_id', auth()->user()->id)
+    //         ->where('payment_reference', $paymentReference)
+    //         ->with('items')->first();
+    // }
 }
