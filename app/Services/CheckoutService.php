@@ -2,6 +2,11 @@
 
 namespace App\Services;
 
+use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlocked;
+use App\Events\PurchaseConfirmed;
+use App\Models\Achievement;
+use App\Models\Badge;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Traits\ResponseHandler;
@@ -82,7 +87,8 @@ class CheckoutService
                 // if all is good, delete cart
                 $cartService->deleteCart();
 
-                // dispatch event if it meets crtiteria
+                // check if this is achivement or a badge
+                event(new PurchaseConfirmed($request->user(), $order));
             } else {
                 if ($getCart->payment_reference != $request->reference_no) {
                     return $this->errorResponse('Payment reference and cart mismatch');

@@ -24,7 +24,7 @@ Route::middleware('auth:api')->prefix('user')->group(function() {
         Route::delete('/{cartItemId}', [CartController::class, 'deleteCartItem']);
     });
 
-    Route::prefix('order')->group(function () {
+    Route::prefix('')->group(function () {
         Route::get('/', [CheckoutController::class, 'initializePayment']);
         Route::post('/confirm', [CheckoutController::class, 'paymentConfirmation']);
     });
