@@ -60,4 +60,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Badge::class, 'user_badges')
                     ->withTimestamps();
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -7,8 +7,6 @@ use App\Events\BadgeUnlocked;
 use App\Events\PurchaseConfirmed;
 use App\Models\Achievement;
 use App\Models\Badge;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class PurchaseConfirmedListener
 {
@@ -37,19 +35,19 @@ class PurchaseConfirmedListener
             }
 
             if ($unlocked && !$user->achievements->contains($achievement->id)) {
-                $user->achievements()->attach($achievement->id);
-
                 event(new AchievementUnlocked($user, $achievement));
             }
         }
 
         // Badges
         $unlockedCount = $user->achievements()->count();
+        // $eligibleBadge = Badge::where('required_achievements', '<=', $unlockedCount)
+        //     ->orderByDesc('required_achievements')
+        //     ->first();
 
         foreach (Badge::all() as $badge) {
             if ($unlockedCount >= $badge->required_achievements &&
                 !$user->badges->contains($badge->id)) {
-                $user->badges()->attach($badge->id);
 
                 event(new BadgeUnlocked($user, $badge));
             }

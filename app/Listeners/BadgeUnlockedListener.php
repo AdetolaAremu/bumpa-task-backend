@@ -13,6 +13,6 @@ class BadgeUnlockedListener
      */
     public function handle(BadgeUnlocked $event): void
     {
-        //
+        $event->user->badges()->attach($event->badge->id);
     }
 }
