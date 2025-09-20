@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Achievement;
 use App\Models\Badge;
+use App\Models\Cashback;
 use App\Models\Order;
 use App\Models\UserAchievement;
 use App\Models\UserBadges;
@@ -15,18 +16,18 @@ class UtilService
         $userId = auth()->id();
 
         $stats = Order::selectRaw('
-                COALESCE(SUM(cart_items.quantity), 0) as total_products,
-                COALESCE(SUM(cart_items.price * cart_items.quantity), 0) as total_spent,
-                COALESCE(SUM(CASE WHEN orders.status = "successful" THEN 1 ELSE 0 END), 0) as successful_orders,
-                (
-                    SELECT COUNT(*)
-                    FROM user_achievements
-                    WHERE user_id = ?
-                ) as achievements
-            ', [$userId])
-            ->leftJoin('cart_items', 'orders.id', '=', 'cart_items.cart_id')
-            ->where('orders.user_id', $userId)
-            ->first();
+            COALESCE(SUM(order_items.quantity), 0) as total_products,
+            COALESCE(SUM(order_items.price * order_items.quantity), 0) as total_spent,
+            COALESCE(COUNT(DISTINCT CASE WHEN orders.payment_status = "paid" THEN orders.id END), 0) as successful_orders,
+            (
+                SELECT COUNT(*)
+                FROM user_achievements
+                WHERE user_id = ?
+            ) as achievements
+        ', [$userId])
+        ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+        ->where('orders.user_id', $userId)
+        ->first();
 
         return $stats;
     }
@@ -62,11 +63,22 @@ class UtilService
 
     public function userAchievements()
     {
-        return UserAchievement::with('achievements')->get();
+        $userId = auth()->id();
+
+        return UserAchievement::where('user_id', $userId)->with('achievements')->get();
     }
 
     public function userBadges()
     {
-        return UserBadges::with('badges')->get();
+        $userId = auth()->id();
+
+        return UserBadges::where('user_id', $userId)->with('badges')->get();
+    }
+
+    public function getAllUserCashBackTotal()
+    {
+        $userId = auth()->id();
+
+        return Cashback::where('user_id', $userId)->sum('amount');
     }
 }

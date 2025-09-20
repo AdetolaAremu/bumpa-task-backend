@@ -49,7 +49,7 @@ class PurchaseConfirmedListener
             if ($unlockedCount >= $badge->required_achievements &&
                 !$user->badges->contains($badge->id)) {
 
-                event(new BadgeUnlocked($user, $badge));
+                event(new BadgeUnlocked($user, $badge, $event->order));
             }
         }
     }

@@ -10,11 +10,6 @@ class UserAchievement extends Model
 
     public function achievements()
     {
-        return $this->hasMany(Achievement::class);
-    }
-
-    public function badges()
-    {
-        return $this->hasMany(Achievement::class);
+        return $this->hasOne(Achievement::class, 'id', 'achievement_id');
     }
 }

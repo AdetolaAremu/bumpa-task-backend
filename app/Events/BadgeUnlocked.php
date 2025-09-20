@@ -12,13 +12,15 @@ class BadgeUnlocked
 
     public $user;
     public $badge;
+    public $order;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($user, $badge)
+    public function __construct($user, $badge, $order)
     {
         $this->user = $user;
         $this->badge = $badge;
+        $this->order = $order;
     }
 }

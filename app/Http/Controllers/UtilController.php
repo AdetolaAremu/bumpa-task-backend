@@ -52,4 +52,11 @@ class UtilController extends Controller
 
         return $this->successResponse('Badges retrieved successfully', $badges);
     }
+
+    public function getUserCashbackTotal(UtilService $utilService)
+    {
+        $cashback = $utilService->getAllUserCashBackTotal();
+
+        return $this->successResponse('Badges retrieved successfully', $cashback);
+    }
 }
