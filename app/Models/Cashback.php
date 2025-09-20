@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Badge extends Model
+class Cashback extends Model
 {
     protected $guarded = ['id'];
 }

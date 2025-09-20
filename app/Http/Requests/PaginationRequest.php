@@ -24,6 +24,7 @@ class PaginationRequest extends FormRequest
         return [
             'searchQuery' => 'nullable|string|max:100',
             'pageSize' => 'nullable|numeric',
+            'limit' => 'nullable|numeric'
         ];
     }
 }

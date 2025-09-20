@@ -2,6 +2,11 @@
 
 namespace App\Services;
 
+use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlocked;
+use App\Events\PurchaseConfirmed;
+use App\Models\Achievement;
+use App\Models\Badge;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Traits\ResponseHandler;
@@ -63,12 +68,13 @@ class CheckoutService
         try {
             $response = Http::withToken(config('app.paystackSecret'))
                 ->get("https://api.paystack.co/transaction/verify/{$request->reference_no}");
+            // $response['data']['status'] = 'success';
 
             $cartService = new CartService();
             $getCart = $cartService->getUserCartWithItems();
 
             if ($response->successful() && $response['data']['status'] === 'success') {
-            // if ($response['data']['status'] === 'success') {
+                // if ($response['data']['status'] === 'success') {
                 if ($getCart->payment_reference != $request->reference_no) {
                     return $this->errorResponse('Payment reference and cart mismatch');
                 }
@@ -82,7 +88,7 @@ class CheckoutService
                 // if all is good, delete cart
                 $cartService->deleteCart();
 
-                // dispatch event if it meets crtiteria
+                event(new PurchaseConfirmed($request->user(), $order));
             } else {
                 if ($getCart->payment_reference != $request->reference_no) {
                     return $this->errorResponse('Payment reference and cart mismatch');

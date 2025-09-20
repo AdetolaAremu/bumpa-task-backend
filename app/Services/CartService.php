@@ -20,28 +20,23 @@ class CartService
             $getProductService = new ProductService();
             $getProduct = $getProductService->getProductById($request->product_id);
 
-            if (!$getProduct) return $this->errorResponse('Product not found or unavailable');
-
-            // check if item exist in the cart already
-            $itemCheck = $this->itemExistCheck($request->product_id);
-
-            // if yes, DELETE
-            if ($itemCheck) $itemCheck->delete();
+            if (!$getProduct) {
+                return $this->errorResponse('Product not found or unavailable');
+            }
 
             $cart = $this->getUserCartSlim();
 
             if (!$cart) {
                 $cart = $this->createCart();
+            }
 
-                CartItem::create([
-                    'cart_id' => $cart->id,
-                    'product_id' => $request->product_id,
-                    'price' => $getProduct->price,
-                    'title' => $getProduct->title,
-                    'quantity' => $request->quantity,
-                    'image' => $getProduct->image_url,
-                    'user_id' => $request->user()->id
-                ]);
+            $itemCheck = CartItem::where('cart_id', $cart->id)
+                ->where('product_id', $request->product_id)
+                ->first();
+
+            if ($itemCheck) {
+                $itemCheck->quantity += 1;
+                $itemCheck->save();
             } else {
                 CartItem::create([
                     'cart_id' => $cart->id,
@@ -50,7 +45,7 @@ class CartService
                     'title' => $getProduct->title,
                     'quantity' => $request->quantity,
                     'image' => $getProduct->image_url,
-                    'user_id' => $request->user()->id
+                    'user_id' => $request->user()->id,
                 ]);
             }
 
@@ -61,6 +56,7 @@ class CartService
             return $this->errorResponse('Error adding item to cart');
         }
     }
+
 
     public function itemExistCheck($productId)
     {
@@ -94,17 +90,10 @@ class CartService
 
     public function deleteCartItems($cartItemId)
     {
-        $cartItem = CartItem::where('id', $cartItemId)->first();
+        $cartItem = CartItem::where('product_id', $cartItemId)->first();
 
         if (!$cartItem) return null;
 
         return $cartItem->delete();
     }
-
-    // public function getCartByPaymentReference($paymentReference)
-    // {
-    //     return Cart::where('user_id', auth()->user()->id)
-    //         ->where('payment_reference', $paymentReference)
-    //         ->with('items')->first();
-    // }
 }
