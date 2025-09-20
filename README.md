@@ -100,8 +100,6 @@ Contains APIs for stats, orders, achievements, badges, cashbacks, and more:
 -   `GET /achievements` - Get user achievements
 -   `GET /badges` - Get available badges
 -   `GET /cashbacks` - Get cashback history
--   `GET /leaderboard` - Get user rankings
--   `POST /claim-reward` - Claim achievement rewards
 
 ## 🔐 Authentication
 
