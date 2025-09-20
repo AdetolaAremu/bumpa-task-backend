@@ -94,7 +94,7 @@ class CartService
 
     public function deleteCartItems($cartItemId)
     {
-        $cartItem = CartItem::where('id', $cartItemId)->first();
+        $cartItem = CartItem::where('product_id', $cartItemId)->first();
 
         if (!$cartItem) return null;
 

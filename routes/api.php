@@ -11,12 +11,12 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'loginUser']);
 });
 
-Route::middleware('auth:api')->prefix('user')->group(function() {
-    Route::prefix('products')->group(function () {
-        Route::get('/', [ProductController::class, 'getAllProducts']);
-        Route::get('/{slug}', [ProductController::class, 'getOneProduct']);
-    });
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'getAllProducts']);
+    Route::get('/{slug}', [ProductController::class, 'getOneProduct']);
+});
 
+Route::middleware('auth:api')->prefix('user')->group(function() {
     Route::prefix('cart')->group(function () {
         Route::get('/', [CartController::class, 'getUserCart']);
         Route::post('/', [CartController::class, 'addToCart']);
@@ -24,7 +24,7 @@ Route::middleware('auth:api')->prefix('user')->group(function() {
         Route::delete('/{cartItemId}', [CartController::class, 'deleteCartItem']);
     });
 
-    Route::prefix('')->group(function () {
+    Route::prefix('order')->group(function () {
         Route::get('/', [CheckoutController::class, 'initializePayment']);
         Route::post('/confirm', [CheckoutController::class, 'paymentConfirmation']);
     });
