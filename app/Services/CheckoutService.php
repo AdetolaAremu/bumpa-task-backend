@@ -66,15 +66,15 @@ class CheckoutService
         DB::beginTransaction();
 
         try {
-            // $response = Http::withToken(config('app.paystackSecret'))
-            //     ->get("https://api.paystack.co/transaction/verify/{$request->reference_no}");
-            $response['data']['status'] = 'success';
+            $response = Http::withToken(config('app.paystackSecret'))
+                ->get("https://api.paystack.co/transaction/verify/{$request->reference_no}");
+            // $response['data']['status'] = 'success';
 
             $cartService = new CartService();
             $getCart = $cartService->getUserCartWithItems();
 
-            // if ($response->successful() && $response['data']['status'] === 'success') {
-            if ($response['data']['status'] === 'success') {
+            if ($response->successful() && $response['data']['status'] === 'success') {
+                // if ($response['data']['status'] === 'success') {
                 if ($getCart->payment_reference != $request->reference_no) {
                     return $this->errorResponse('Payment reference and cart mismatch');
                 }
