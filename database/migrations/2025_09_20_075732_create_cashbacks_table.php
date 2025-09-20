@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->decimal('amount', 10, 2);
             $table->foreignId('user_id')->references('id')->on('users');
-            $table->boolean('cashback_used')->boolean(0);
+            $table->boolean('cashback_used')->default(0);
             $table->string('order_code');
             $table->datetime('cashback_used_at')->nullable();
             $table->timestamps();

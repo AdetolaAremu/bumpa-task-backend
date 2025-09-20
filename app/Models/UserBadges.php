@@ -10,6 +10,6 @@ class UserBadges extends Model
 
     public function badges()
     {
-        return $this->hasMany(Badge::class, 'id', 'badge_id');
+        return $this->hasOne(Badge::class, 'id', 'badge_id');
     }
 }

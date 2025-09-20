@@ -38,5 +38,6 @@ Route::middleware('auth:api')->prefix('user')->group(function() {
         Route::get('/user-achievements', [UtilController::class, 'getAllUserAchievements']);
         Route::get('/user-badges', [UtilController::class, 'getAllUserBadges']);
         Route::get('/cashback-total', [UtilController::class, 'getUserCashbackTotal']);
+        Route::get('/user-combined-achievements', [UtilController::class, 'userBadgeAndAchievement']);
     });
 });

@@ -8,6 +8,7 @@ use App\Models\Cashback;
 use App\Models\Order;
 use App\Models\UserAchievement;
 use App\Models\UserBadges;
+use Illuminate\Support\Facades\Log;
 
 class UtilService
 {
@@ -38,6 +39,7 @@ class UtilService
         $pageSize = $request->pageSize ?? 15;
 
         if ($request->limit) {
+            Log::info($request->limit);
             $orders = Order::where('user_id', $userId)
                 ->with('items')
                 ->limit($request->limit)
@@ -80,5 +82,40 @@ class UtilService
         $userId = auth()->id();
 
         return Cashback::where('user_id', $userId)->sum('amount');
+    }
+
+    public function userCombinedAchievementAndBadges()
+    {
+        $user = auth()->user();
+
+        $allAchievements = Achievement::pluck('name')->toArray();
+
+        $unlockedAchievements = $user->achievements()->pluck('name')->toArray();
+        $unlockedCount = count($unlockedAchievements);
+
+        $nextAvailable = array_values(array_diff($allAchievements, $unlockedAchievements));
+
+        $badges = Badge::orderBy('required_achievements')->get();
+
+        $currentBadge = null;
+        $nextBadge = null;
+        $remainingToNext = 0;
+
+        foreach ($badges as $badge) {
+            if ($unlockedCount >= $badge->required_achievements) {
+                $currentBadge = $badge->name;
+            } elseif ($unlockedCount < $badge->required_achievements && !$nextBadge) {
+                $nextBadge = $badge->name;
+                $remainingToNext = $badge->required_achievements - $unlockedCount;
+            }
+        }
+
+        return [
+            'unlocked_achievements' => $unlockedAchievements,
+            'next_available_achievements' => $nextAvailable,
+            'current_badge' => $currentBadge,
+            'next_badge' => $nextBadge,
+            'remaining_to_unlock_next_badge' => $remainingToNext,
+        ];
     }
 }
